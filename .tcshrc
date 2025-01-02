@@ -1,0 +1,4 @@
+echo "On `hostname`."
+echo "Using tcsh."
+echo "Switching to bash."
+bash
