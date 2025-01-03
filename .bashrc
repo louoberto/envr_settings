@@ -1,41 +1,58 @@
-# Startup stuff ------------------------------------------------------
-umask 022   #Used for setting file priveleges for files I create (I can write, others can read)
-# --------------------------------------------------------------------
-
+#==============================================================================
 # Prompt
+#==============================================================================
 export prompt='[%n@%m %c02]$ '
-export PS1='\[\e]0;\h:\w\a\]\n\[\e[36m\]\u@\h \[\e[33m\]\w\[\e[0m\] $? \n> '
+
+if [ "$OS" == "Windows_NT" ] ; then
+    hname=$(HOSTNAME)
+    num_cores=$(grep -c ^processor /proc/cpuinfo) # Get the number of processing cores
+    if [ -z "$num_cores" ]; then
+        num_cores=$(cat /proc/cpuinfo | grep processor | wc -l) # Get the number of processing cores
+    fi
+    export PS1='\[\e[36m\]\u@\h.\[\e[32m\]${num_cores} \[\e[33m\]\w\[\e[0m\] $? \n> '
+else
+    num_cores=$(nproc) # Get the number of processing cores
+    export PS1='\[\e]0;\h:\w\a\]\n\[\e[36m\]\u@\h.\[\e[32m\]${num_cores} \[\e[33m\]\w\[\e[0m\] $? \n> '
+fi
 export PS4=':${BASH_SOURCE}:${LINENO}+'
+#==============================================================================
+
+#==============================================================================
+# Some login info
+#==============================================================================
+umask 022   #Used for setting file priveleges for files I create (I can write, others can read)
 alias u='cd ..'
 alias mc='mv'
-# --------------------------------------------------------------------
-
-# OS
-unamestr=$(uname -r)
-# --------------------------------------------------------------------
-
-# ALIASES
-export PATH="~/tools/fortify/source:$PATH"
-export PATH="~/miniconda3/condabin/:$PATH"
 alias clu="driver.py"
 alias rpi="ssh louoberto@192.168.1.155"
 alias python='python3'
-alias lou='cd /Users/loberto/tools/'
-
-# ====================================================================
-if [[ $(uname) == "Darwin" ]]; then # Mac Only
-    clear
-    echo On bash. The current host name is $HOSTNAME.
-    export BASH_SILENCE_DEPRECATION_WARNING=1
-    alias ls='ls -aB --color'
-    export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
-    export PATH=/usr/local/texlive/2024/bin/universal-darwin:$PATH
-    ln -s "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code
+export PATH="~/tools/fortify/source:$PATH"
+export PATH="~/miniconda3/condabin/:$PATH"
+if [ "$OS" == "Windows_NT" ]; then
+    alias ls='ls -aB --color --group-directories-first'
+    alias lou="cd ~/tools;"
+else
+    if [[ $(uname) == "Darwin" ]]; then
+        alias ls='ls -aB --color'
+        #my_home="c:/users/lou/tools"
+        export BASH_SILENCE_DEPRECATION_WARNING=1
+        export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
+        export PATH=/usr/local/texlive/2024/bin/universal-darwin:$PATH
+        ln -s "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code
+    fi
 fi
-#--------------------------------------------------------------------
+#==============================================================================
 
-# COMMANDS
-#====================================================================
+#==============================================================================
+# Custom commands
+#==============================================================================
+run(){
+    the_cmd="$@"
+    echo 'How many times to run?'
+    read itrs
+    for ((i=0;i<$itrs;i++)); do $the_cmd; done
+}
+#------------------------------------------------------------------------------
 gadd(){
     git add "$@"
 }
@@ -43,8 +60,43 @@ gpush(){
     git commit -m "$1"
     git push
 }
-
-# Compile latex and open PDF shortcut
+#------------------------------------------------------------------------------
+f(){
+    fcmd="find . -name *$1*" # -not -name '*.o'"
+    ${fcmd}
+}
+#------------------------------------------------------------------------------
+g(){
+    # Enter the directories you wish to exclude
+    xdir=(
+        \*docs\*
+        \*.git\*
+    )
+    # Enter the files you wish to exclude
+    xfil=(
+        '*.o'
+        '*~'
+        #'*log'
+    )
+    # Create string for Grep cmd for these
+    exclu=""
+    for edir in "${xdir[@]}"
+    do
+        exclu="${exclu}--exclude-dir=${edir} "
+    done
+    for efil in "${xfil[@]}"
+    do
+        exclu="${exclu}--exclude=${efil} "
+    done
+    gcmd="grep -irnI $exclu--color"
+    # Call the string and enter the file
+    if [ "$OS" == "Windows_NT" ] ; then
+        ${gcmd} "$1" ./
+    else
+        ${gcmd} "$1"
+    fi
+}
+#------------------------------------------------------------------------------
 ctex(){
     # Store tex filename
     theFile=$1
@@ -70,59 +122,4 @@ ctex(){
         echo "This is not a LaTeX file. Please, try again."
     fi
 }
-
-run(){
-    the_cmd="$@"
-    echo 'How many times to run?'
-    read itrs
-    for ((i=0;i<$itrs;i++)); do $the_cmd; done
-}
-#-----------------------------------------------------
-
-# Find command shortcut ------------------------------
-f(){
-    fcmd="find . -name *$1* -not -name '*.o'"
-    ${fcmd}
-}
-#-----------------------------------------------------
-
-# Find & Remove Command ------------------------------
-frm(){
-    frmcmd1="find"
-    frmcmd2="-type f -name"
-    frmcmd="${frmcmd1} $1 ${frmcmd2} $2 -delete"
-    ${frmcmd}
-}
-#-----------------------------------------------------
-
-# Grep command shortcut ------------------------------
-g(){
-    # Enter the directories you wish to exclude
-    xdir=(
-        \*genTM\*
-        \*kits\*
-        \*docs\*
-        \*build\*
-        \*.git\*
-    )
-    # Enter the files you wish to exclude
-    xfil=(
-        '*.o'
-        '*~'
-        '*log'
-    )
-    # Create string for Grep cmd for these
-    exclu=""
-    for edir in "${xdir[@]}"
-    do
-        exclu="${exclu}--exclude-dir=${edir} "
-    done
-    for efil in "${xfil[@]}"
-    do
-        exclu="${exclu}--exclude=${efil} "
-    done
-    gcmd="grep -irnI $exclu--color"
-    # Call the string and enter the file
-    ${gcmd} "$1"
-}
-#-----------------------------------------------------
+#==============================================================================
