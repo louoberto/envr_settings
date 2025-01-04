@@ -31,6 +31,7 @@ export PATH="~/miniconda3/condabin/:$PATH"
 if [ "$OS" == "Windows_NT" ]; then
     alias ls='ls -aB --color --group-directories-first'
     alias lou="cd ~/tools;"
+    cd ~/tools
 else
     if [[ $(uname) == "Darwin" ]]; then
         alias ls='ls -aB --color'
