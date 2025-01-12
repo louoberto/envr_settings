@@ -11,7 +11,11 @@ if [ "$OS" == "Windows_NT" ] ; then
     fi
     export PS1='\[\e[36m\]\u@\h.\[\e[32m\]${num_cores} \[\e[33m\]\w\[\e[0m\] $? \n> '
 else
-    num_cores=$(nproc) # Get the number of processing cores
+    if [[ $(uname) == "Darwin" ]]; then
+        num_cores=$(sysctl -n hw.ncpu)  # macOS equivalent for number of processing cores
+    else
+        num_cores=$(nproc)  # Linux command
+    fi
     export PS1='\[\e]0;\h:\w\a\]\n\[\e[36m\]\u@\h.\[\e[32m\]${num_cores} \[\e[33m\]\w\[\e[0m\] $? \n> '
 fi
 export PS4=':${BASH_SOURCE}:${LINENO}+'
@@ -39,6 +43,7 @@ else
         export BASH_SILENCE_DEPRECATION_WARNING=1
         export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
         export PATH=/usr/local/texlive/2024/bin/universal-darwin:$PATH
+        export PATH="$PATH:/opt/homebrew/bin"
         ln -s "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code
     fi
 fi
