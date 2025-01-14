@@ -5,6 +5,3 @@
     lg = log --oneline --decorate=short -50
 [core]
     excludesfile = ~/.gitignore_global
-
-[includeIf "gitdir:/Users/louoberto/blend/"]
-    path = /Users/louoberto/.gitconfig-noaa
