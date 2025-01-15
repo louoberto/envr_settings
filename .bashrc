@@ -48,8 +48,8 @@ else
     fi
 fi
 
-if [ -f .bash_login ]; then
-    source .bash_login
+if [ -f ../.bash_login ]; then
+    source ../.bash_login
 fi
 #==============================================================================
 
