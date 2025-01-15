@@ -27,7 +27,7 @@ export PS4=':${BASH_SOURCE}:${LINENO}+'
 umask 022   #Used for setting file priveleges for files I create (I can write, others can read)
 alias u='cd ..'
 alias mc='mv'
-alias clu="driver.py"
+alias clu="fortify"
 alias rpi="ssh louoberto@192.168.1.155"
 alias python='python3'
 export PATH="~/tools/fortify/source:$PATH"
@@ -46,6 +46,10 @@ else
         export PATH="$PATH:/opt/homebrew/bin"
         ln -s "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code
     fi
+fi
+
+if [ -f .bash_login ]; then
+    source .bash_login
 fi
 #==============================================================================
 
