@@ -36,16 +36,17 @@ if [ "$OS" == "Windows_NT" ]; then
     alias ls='ls -aB --color --group-directories-first'
     alias lou="cd ~/tools;"
     cd ~/tools
-else
-    if [[ $(uname) == "Darwin" ]]; then
-        alias ls='ls -aB --color'
-        #my_home="c:/users/lou/tools"
-        export BASH_SILENCE_DEPRECATION_WARNING=1
-        export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
-        export PATH=/usr/local/texlive/2024/bin/universal-darwin:$PATH
-        export PATH="$PATH:/opt/homebrew/bin"
-        ln -s "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code
-    fi
+elif [[ $(uname) == "Darwin" ]]; then
+    alias ls='ls -aB --color'
+    export BASH_SILENCE_DEPRECATION_WARNING=1
+    export PATH=/Library/Frameworks/Python.framework/Versions/Current/bin:$PATH
+    export PATH=/usr/local/texlive/2024/bin/universal-darwin:$PATH
+    export PATH="$PATH:/opt/homebrew/bin"
+    ln -s "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code
+elif [[ $(uname) == "Linux" ]]; then
+    alias ls='ls -aB --color --group-directories-first'
+    export PATH="$PATH:/usr/local/bin:/usr/bin:/bin"
+    ulimit -s unlimited
 fi
 
 if [ -f ../.bash_login ]; then
