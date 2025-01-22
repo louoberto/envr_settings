@@ -36,7 +36,7 @@ export PATH="~/miniconda3/condabin/:$PATH"
 if [ "$OS" == "Windows_NT" ]; then
     alias ls='ls -aB --color --group-directories-first'
     alias lou="cd ~/tools;"
-    cd ~/tools
+    cd ~/tools 2>/dev/null || true
 elif [[ $(uname) == "Darwin" ]]; then
     alias ls='ls -aB --color'
     export BASH_SILENCE_DEPRECATION_WARNING=1
