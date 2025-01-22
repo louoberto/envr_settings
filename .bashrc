@@ -50,8 +50,8 @@ elif [[ $(uname) == "Linux" ]]; then
     ulimit -s unlimited
 fi
 
-if [ -f ../.bash_login ]; then
-    source ../.bash_login
+if [ -f "$(dirname "${BASH_SOURCE[0]}")/../.bash_login" ]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/../.bash_login"
 fi
 #==============================================================================
 
