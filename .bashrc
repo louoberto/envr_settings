@@ -24,6 +24,7 @@ export PS4=':${BASH_SOURCE}:${LINENO}+'
 #==============================================================================
 # Some login info
 #==============================================================================
+# vsce login LouOberto; AESVTcpmdOwBpNsi4zcF4mgW98NoEdX0uaA8QuANtKFm2J3yrK9uJQQJ99BAACAAAAAAAAAAAAASAZDOZcws
 umask 022   #Used for setting file priveleges for files I create (I can write, others can read)
 alias u='cd ..'
 alias mc='mv'
