@@ -109,6 +109,23 @@ g(){
     fi
 }
 #------------------------------------------------------------------------------
+what() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: what <file>" >&2
+        return 1
+    fi
+
+    for file in "$@"; do
+        if [[ ! -f "$file" ]]; then
+            echo "what: $file: No such file" >&2
+            continue
+        fi
+
+        echo "$file:"
+        strings "$file" | grep -o '@(#).*' || echo "No what strings found."
+    done
+}
+#------------------------------------------------------------------------------
 ctex(){
     # Store tex filename
     theFile=$1
