@@ -79,7 +79,7 @@ f(){
 }
 #------------------------------------------------------------------------------
 frm(){
-    for f in $(find . -type f -name '*libifcore*'); do
+    for f in $(find . -type f -name '*$1*'); do
     rm -f "$f"
     done
 }
