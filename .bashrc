@@ -79,7 +79,7 @@ f(){
 }
 #------------------------------------------------------------------------------
 frm(){
-    for f in $(find build deploy -type f -name '*$1*'); do
+    for f in $(find builds deploy -type f -name '*$1*'); do
         rm -f "$f"
     done
 }
